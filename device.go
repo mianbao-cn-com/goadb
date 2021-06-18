@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/zach-klippenstein/goadb/internal/errors"
+	"github.com/mianbao-cn-com/goadb/internal/errors"
 	"github.com/zach-klippenstein/goadb/wire"
 )
 
@@ -141,10 +141,10 @@ func (c *Device) RunCommandNoShell(cmd string, args ...string) (string, error) {
 	// Shell responses are special, they don't include a length header.
 	// We read until the stream is closed.
 	// So, we can't use conn.RoundTripSingleResponse.
-	if err = conn.SendMessage([]byte(req)); err != nil {
+	if err = conn.SendMessage([]byte(cmd)); err != nil {
 		return "", wrapClientError(err, c, "RunCommandNoShell")
 	}
-	if _, err = conn.ReadStatus(req); err != nil {
+	if _, err = conn.ReadStatus(cmd); err != nil {
 		return "", wrapClientError(err, c, "RunCommandNoShell")
 	}
 
