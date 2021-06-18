@@ -126,6 +126,32 @@ func (c *Device) RunCommand(cmd string, args ...string) (string, error) {
 	return string(resp), wrapClientError(err, c, "RunCommand")
 }
 
+func (c *Device) RunCommandNoShell(cmd string, args ...string) (string, error) {
+	cmd, err := prepareCommandLine(cmd, args...)
+	if err != nil {
+		return "", wrapClientError(err, c, "RunCommand")
+	}
+
+	conn, err := c.dialDevice()
+	if err != nil {
+		return "", wrapClientError(err, c, "RunCommand")
+	}
+	defer conn.Close()
+
+	// Shell responses are special, they don't include a length header.
+	// We read until the stream is closed.
+	// So, we can't use conn.RoundTripSingleResponse.
+	if err = conn.SendMessage([]byte(req)); err != nil {
+		return "", wrapClientError(err, c, "RunCommandNoShell")
+	}
+	if _, err = conn.ReadStatus(req); err != nil {
+		return "", wrapClientError(err, c, "RunCommandNoShell")
+	}
+
+	resp, err := conn.ReadUntilEof()
+	return string(resp), wrapClientError(err, c, "RunCommandNoShell")
+}
+
 /*
 Remount, from the official adb command’s docs:
 	Ask adbd to remount the device's filesystem in read-write mode,
