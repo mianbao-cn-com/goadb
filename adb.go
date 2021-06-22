@@ -35,6 +35,10 @@ func NewWithConfig(config ServerConfig) (*Adb, error) {
 	return &Adb{server}, nil
 }
 
+func (c *Adb) GetAdbPath() string {
+	return c.server.GetAdbPath()
+}
+
 // Dial establishes a connection with the adb server.
 func (c *Adb) Dial() (*wire.Conn, error) {
 	return c.server.Dial()

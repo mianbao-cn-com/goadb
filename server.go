@@ -37,6 +37,7 @@ type ServerConfig struct {
 type server interface {
 	Start() error
 	Dial() (*wire.Conn, error)
+	GetAdbPath() string
 }
 
 func roundTripSingleResponse(s server, req string) ([]byte, error) {
