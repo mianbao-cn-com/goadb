@@ -142,3 +142,7 @@ var localFilesystem = &filesystem{
 		return exec.Command(name, arg...).CombinedOutput()
 	},
 }
+
+func (s *realServer) GetAdbPath() string {
+	return s.config.PathToAdb
+}
