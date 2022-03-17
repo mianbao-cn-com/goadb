@@ -164,9 +164,9 @@ func readHexLength(r io.Reader) (int, error) {
 	}
 
 	// Clip the length to 255, as per the Google implementation.
-	if length > MaxMessageLength {
-		length = MaxMessageLength
-	}
+	//if length > MaxMessageLength {
+	//	length = MaxMessageLength
+	//}
 
 	return int(length), nil
 }
